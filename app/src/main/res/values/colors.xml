@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="bg">#0C0C0B</color>
+    <color name="ink">#ECE8DF</color>
+    <color name="muted">#8C887F</color>
+    <color name="faint">#4A4843</color>
+    <color name="line">#262522</color>
+    <color name="track_off">#3A3934</color>
+    <color name="knob_off">#6B6862</color>
+    <color name="sheet">#151514</color>
+</resources>
