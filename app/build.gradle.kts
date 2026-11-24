@@ -20,7 +20,7 @@ android {
             storeFile = file("nightfall.keystore")
             storePassword = "nightfall"
             keyAlias = "funkstille"
-            keyPassword = "funkstille"
+            keyPassword = "nightfall"
         }
     }
 
