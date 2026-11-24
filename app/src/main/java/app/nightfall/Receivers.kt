@@ -20,7 +20,7 @@ class AlarmReceiver : BroadcastReceiver() {
         val app = context.applicationContext
         if (!Prefs(app).enabled) return
 
-        Scheduler.apply(app) // gleich den nächsten Tag planen
+        Scheduler.apply(app, afterTrigger = true) // gleich den nächsten Tag planen
 
         val pending = goAsync()
         val wl = app.getSystemService(PowerManager::class.java)
@@ -31,7 +31,7 @@ class AlarmReceiver : BroadcastReceiver() {
             try {
                 val text = Text(Prefs(app).lang)
                 when (Radio.goDark(app)) {
-                    Radio.Outcome.OK -> Unit
+                    Radio.Outcome.OK -> Radio.prepareShizukuAutostart()
                     Radio.Outcome.NO_SHIZUKU -> Notifier.problem(app, text.failNoShizuku)
                     Radio.Outcome.NO_PERMISSION -> Notifier.problem(app, text.failNoPermission)
                     Radio.Outcome.AIRPLANE_FAILED -> Notifier.problem(app, text.failAirplane)

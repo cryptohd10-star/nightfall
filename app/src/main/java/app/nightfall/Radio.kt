@@ -72,6 +72,17 @@ object Radio {
         return Outcome.OK
     }
 
+    /**
+     * Shizuku braucht für "Start beim Booten" die Berechtigung WRITE_SECURE_SETTINGS und darf nicht
+     * vom Akku-Sparen gestoppt werden. Beides kann eine ADB-Shell erteilen – also erledigt Nightfall
+     * das automatisch, sobald es Shizuku-Zugriff hat. Mehrfaches Ausführen schadet nicht.
+     */
+    fun prepareShizukuAutostart() {
+        if (!alive() || !permitted()) return
+        exec("pm grant $SHIZUKU_PACKAGE android.permission.WRITE_SECURE_SETTINGS")
+        exec("dumpsys deviceidle whitelist +$SHIZUKU_PACKAGE")
+    }
+
     private fun airplaneOn(context: Context): Boolean =
         Settings.Global.getInt(context.contentResolver, Settings.Global.AIRPLANE_MODE_ON, 0) == 1
 

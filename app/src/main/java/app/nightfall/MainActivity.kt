@@ -55,6 +55,7 @@ class MainActivity : AppCompatActivity() {
     private val ease = PathInterpolator(0.3f, 0f, 0f, 1f)
     private var startedAt = 0L
     private var setupShown = false
+    private var autostartPrepared = false
 
     private val ink by lazy { ContextCompat.getColor(this, R.color.ink) }
     private val muted by lazy { ContextCompat.getColor(this, R.color.muted) }
@@ -276,6 +277,10 @@ class MainActivity : AppCompatActivity() {
 
         if (missing) buildSteps(all)
         showSetup(missing)
+        if (!missing && !autostartPrepared) {
+            autostartPrepared = true
+            kotlin.concurrent.thread { Radio.prepareShizukuAutostart() }
+        }
     }
 
     private fun buildSteps(all: List<Step>) {

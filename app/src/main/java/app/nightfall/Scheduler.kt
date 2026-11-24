@@ -25,15 +25,17 @@ object Scheduler {
         return at
     }
 
-    fun apply(context: Context) {
+    /**
+     * @param afterTrigger true, wenn der Wecker gerade ausgelöst hat – dann sicher erst morgen wieder.
+     */
+    fun apply(context: Context, afterTrigger: Boolean = false) {
         val prefs = Prefs(context)
-        if (prefs.enabled) schedule(context, prefs) else cancel(context)
+        if (prefs.enabled) schedule(context, prefs, afterTrigger) else cancel(context)
     }
 
-    private fun schedule(context: Context, prefs: Prefs) {
+    private fun schedule(context: Context, prefs: Prefs, afterTrigger: Boolean) {
         val am = context.getSystemService(AlarmManager::class.java) ?: return
-        // 30 s Puffer, damit ein gerade ausgelöster Wecker nicht nochmals für heute geplant wird
-        val now = ZonedDateTime.now(ZoneId.systemDefault()).plusSeconds(30)
+        val now = ZonedDateTime.now(ZoneId.systemDefault()).let { if (afterTrigger) it.plusSeconds(61) else it }
         val at = nextTrigger(prefs.hour, prefs.minute, now).toInstant().toEpochMilli()
         val pi = pendingIntent(context)
         if (am.canScheduleExactAlarms()) {
